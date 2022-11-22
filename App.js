@@ -8,54 +8,56 @@
 
 import React from 'react';
 import type {Node} from 'react';
-import {
-    Button,
-    StyleSheet,
-    Text,
-    View,
-} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import Swiper from "react-native-screens-swiper";
 import {HomeScreen} from "./stacks/Home";
 import {AddNote} from "./stacks/AddNote";
 import {DisplayNotes} from "./stacks/DisplayNotes";
 
-const Stack = createStackNavigator();
 
 const App: () => Node = () => {
-    const ref = React.useRef(null);
-    return (
-        <View style={styles.container}>
-            <NavigationContainer ref={ref}>
-                <Stack.Navigator initialRouteName="Empty">
-                    <Stack.Screen name="Home" component={HomeScreen} />
-                    <Stack.Screen name="AddNote" component={AddNote} />
-                    <Stack.Screen name="DisplayNotes" component={DisplayNotes} />
-                </Stack.Navigator>
-            </NavigationContainer>
-            <Button
-                onPress={() => ref.current && ref.current.navigate('Home')}
-                title="My Profile"/>
-            <Button
-                onPress={() => ref.current && ref.current.navigate('DisplayNotes')}
-                title="My Notes"/>
-            <Button
-                onPress={() => ref.current && ref.current.navigate('AddNote')}
-                title="Add Note"/>
-        </View>
-    );
-};
+    const data = [
+        {
+            tabLabel: 'Profile',
+            component: HomeScreen(),
+        },
+        {
+            tabLabel: 'My Notes',
+            component: DisplayNotes(),
+        },
+        {
+            tabLabel: 'Add Note',
+            component: AddNote(),
+        }
+    ];
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 50,
-  },
-  item: {
-    padding: 20,
-    fontSize: 15,
-    marginTop: 5,
-  }
-});
+    return (
+        <Swiper
+            data={data}
+            isStaticPills={false}
+            style={styles}
+            // FlatList props
+            >
+        </Swiper>
+    );
+}
+
+const styles = {
+    pillContainer: {
+        height: 50,
+        margin: 10
+    },
+    pillButton: {
+        width: 120
+    },
+    borderActive: {
+        borderColor: 'blue',
+    },
+    pillActive: {
+        backgroundColor: 'blue',
+    },
+    pillLabel: {
+        color: 'black',
+    }
+};
 
 export default App;
