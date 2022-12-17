@@ -6,15 +6,32 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import type {Node} from 'react';
 import Swiper from "react-native-screens-swiper";
 import {HomeScreen} from "./stacks/Home";
 import {AddNote} from "./stacks/AddNote";
 import {DisplayNotes} from "./stacks/DisplayNotes";
-
+import auth from '@react-native-firebase/auth';
+import {AuthForm} from "./stacks/Auth";
 
 const App: () => Node = () => {
+
+    const [initializing, setInitializing] = useState(true);
+    const [user, setUser] = useState(false);
+
+    // Handles user state changes
+    function onAuthStateChanged(user) {
+        setUser(user);
+        if (initializing) setInitializing(false);
+    }
+
+    useEffect(() => {
+        return auth().onAuthStateChanged(onAuthStateChanged); // unsubscribe on unmount
+    }, []);
+
+    if (initializing) return null;
+
     const data = [
         {
             tabLabel: 'Profile',
@@ -29,6 +46,10 @@ const App: () => Node = () => {
             component: AddNote(),
         }
     ];
+
+    if (!user) {
+        return (<AuthForm/>)
+    }
 
     return (
         <Swiper
