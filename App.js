@@ -30,7 +30,6 @@ const App: () => Node = () => {
         return auth().onAuthStateChanged(onAuthStateChanged); // unsubscribe on unmount
     }, []);
 
-    if (initializing) return null;
 
     const data = [
         {
@@ -46,6 +45,9 @@ const App: () => Node = () => {
             component: AddNote(),
         }
     ];
+
+    if (initializing) return null;
+
 
     if (!user) {
         return (<AuthForm/>)
