@@ -34,7 +34,7 @@ const App: () => Node = () => {
     const data = [
         {
             tabLabel: 'Profile',
-            component: HomeScreen(),
+            component: HomeScreen(user),
         },
         {
             tabLabel: 'My Notes',

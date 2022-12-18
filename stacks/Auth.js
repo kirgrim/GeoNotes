@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import { Title } from 'react-native-paper';
 
 export function AuthForm () {
-    const [currentAuthView, setCurrentAuthView] = useState("AuthViewMap");
+    const [currentAuthView, setCurrentAuthView] = useState("Login");
 
     return (
         <View style={styles.container}>

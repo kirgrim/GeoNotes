@@ -1,10 +1,11 @@
 import {Button, Text, View} from "react-native";
 import {logoutUser} from "../utils/auth_utils";
 
-export function HomeScreen() {
+export function HomeScreen(user) {
+    user = user || {}
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text>Home Screen</Text>
+            <Text>Logged In as {user?.email}</Text>
             <Button title="Log Out" onPress={()=>logoutUser()}/>
         </View>
     );
