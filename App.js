@@ -38,7 +38,7 @@ const App: () => Node = () => {
         },
         {
             tabLabel: 'My Notes',
-            component: DisplayNotes(),
+            component: DisplayNotes(user),
         },
         {
             tabLabel: 'Add Note',

@@ -2,7 +2,6 @@ import auth from "@react-native-firebase/auth";
 import {CONSTANTS, JSHash} from 'react-native-hash';
 import {getCollection} from "./db_utils";
 import {showAlert} from "./alert_utils";
-import firestore from "@react-native-firebase/firestore";
 
 const hashAlgorithm = CONSTANTS.HashAlgorithms.sha256;
 
@@ -42,20 +41,25 @@ export async function loginUser(form, props){
     let data = {};
     data['email'] = form.email;
     data['password'] = await JSHash(form.password, hashAlgorithm);
-    const querySnapshot = await getCollection('users')
-        .where('password', '==', data['password'])
-        .where('email', '==', data['email']).get();
-    if (!querySnapshot.empty){
-        return await auth().signInWithEmailAndPassword(data['email'], data['password'])
-            .catch(err=> {
-                showAlert('Auth Failed', `Authorization failed: ${err}`);
-                props.setPassword('');
-            });
-    }else{
-        showAlert('Auth Failed', `Login/password combination is invalid`);
-        props.setPassword('');
+    try {
+        console.log(`Attempting to authorize ${data['email']}`);
+        const querySnapshot = await getCollection('users')
+            .where('password', '==', data['password'])
+            .where('email', '==', data['email']).get();
+        if (!querySnapshot.empty) {
+            return await auth().signInWithEmailAndPassword(data['email'], data['password'])
+                .catch(err => {
+                    showAlert('Auth Failed', `Authorization failed: ${err}`);
+                    props.setPassword('');
+                });
+        } else {
+            showAlert('Auth Failed', `Login/password combination is invalid`);
+            props.setPassword('');
+        }
+    }catch (e) {
+        console.error(`Error auth:`, e)
+        showAlert('Auth Failed', `DB Service is temporary unavailable`)
     }
-    // console.warn('!!No matching user found for email=', data['email']);
     return null;
 }
 
