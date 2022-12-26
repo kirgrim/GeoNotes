@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { Button, Text, View, StyleSheet } from "react-native";
 import {List, Title} from 'react-native-paper';
-import {deleteNote, listNotes} from "../utils/db_utils";
+import {deleteNote, listNotes} from "../utils/note_utils";
 
 function updateUserNotes(setUserNotes, props){
     listNotes(props.user).then(notesList => {

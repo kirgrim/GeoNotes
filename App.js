@@ -42,7 +42,7 @@ const App: () => Node = () => {
         },
         {
             tabLabel: 'Add Note',
-            component: AddNote(),
+            component: AddNote(user),
         }
     ];
 
@@ -57,10 +57,7 @@ const App: () => Node = () => {
         <Swiper
             data={data}
             isStaticPills={false}
-            style={styles}
-            // FlatList props
-            >
-        </Swiper>
+            style={styles}/>
     );
 }
 
