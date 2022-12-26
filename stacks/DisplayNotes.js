@@ -33,7 +33,7 @@ function DisplayNotesList(props) {
                         key={note.id}
                         title={note.title}
                         description={note.description}
-                        right={()=> <Button style={styles.deleteButton} title={"X"} onPress={()=> deleteNote(note.id)}/>}/>
+                        right={()=> <Button color="red" style={styles.deleteButton} title={"X"} onPress={()=> deleteNote(note.id)}/>}/>
                 ))}
                 <Button title="Map View"
                         onPress={() => props.setCurrentView("DisplayNotesMap")}
@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
       textAlign: "center"
     },
     deleteButton: {
-        backgroundColor: "rgb(255, 0, 0)",
-        color: "#ffffff"
+        borderRadius: 10
     }
 });

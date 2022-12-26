@@ -17,6 +17,12 @@ export async function listNotes(user){
 }
 
 
-export function deleteNote(noteId){
-    return getCollection('notes').doc(noteId).delete();
+export async function deleteNote(noteId){
+    console.log('starting deletion of noteId=', noteId)
+    return await getCollection('notes').where("id", "==", noteId).get()
+        .then(querySnapshot=>{
+            querySnapshot.forEach(doc=>{
+                doc.ref.delete();
+            })
+        });
 }
