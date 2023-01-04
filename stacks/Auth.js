@@ -1,4 +1,5 @@
-import {Button, Text, TextInput, View, StyleSheet} from "react-native";
+import {View, StyleSheet, Button} from "react-native";
+import { TextInput, Text } from 'react-native-paper';
 import {createNewUser, loginUser} from "../utils/auth_utils";
 import React, {useState} from "react";
 import { Title } from 'react-native-paper';
@@ -31,14 +32,12 @@ export function LoginForm(props) {
             <Title>Log In</Title>
             <View style={styles.inputView}>
                 <TextInput
-                    style={styles.TextInput}
                     placeholder="Enter Email"
                     onChangeText={newText => props.setEmail(newText)}
                 />
             </View>
             <View style={styles.inputView}>
                 <TextInput
-                    style={styles.TextInput}
                     secureTextEntry={true}
                     placeholder="Enter Password"
                     onChangeText={newText => props.setPassword(newText)}
@@ -60,14 +59,12 @@ export function SignUpForm(props) {
             <Title>Registration</Title>
             <View style={styles.inputView}>
                 <TextInput
-                    style={styles.TextInput}
                     placeholder="Enter Email"
                     onChangeText={newText => props.setEmail(newText)}
                 />
             </View>
             <View style={styles.inputView}>
                 <TextInput
-                    style={styles.TextInput}
                     secureTextEntry={true}
                     placeholder="Enter Password"
                     onChangeText={newText => props.setPassword(newText)}
@@ -75,7 +72,6 @@ export function SignUpForm(props) {
             </View>
             <View style={styles.inputView}>
                 <TextInput
-                    style={styles.TextInput}
                     secureTextEntry={true}
                     placeholder="Repeat Password"
                     onChangeText={newText => props.setRepeatPassword(newText)}/>
@@ -101,17 +97,17 @@ const styles = StyleSheet.create({
 
 
     inputView: {
-        backgroundColor: "#A9A9A9",
-        borderRadius: 30,
-        height: 45,
-        marginBottom: 20,
-        alignItems: "center",
+        // backgroundColor: "#A9A9A9",
+        // borderRadius: 30,
+        height: 40,
+        marginBottom: 25,
+        // alignItems: "center",
     },
     TextInput: {
-        height: 50,
-        flex: 1,
-        padding: 10,
-        marginLeft: 20,
+        // height: 50,
+        // flex: 1,
+        // padding: 10,
+        // marginLeft: 20,
     },
     loginBtn: {
         width: "80%",

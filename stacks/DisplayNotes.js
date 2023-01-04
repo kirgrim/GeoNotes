@@ -28,7 +28,7 @@ export const GetCurrentViewNode = (props) => {
 function DisplayNotesList(props) {
     if (props.userNotes && props.userNotes.length > 0) {
         return (
-            <SafeAreaView>
+            <View>
                 <Title>List View</Title>
                 {props.userNotes.map(note => (
                     <List.Item
@@ -40,7 +40,7 @@ function DisplayNotesList(props) {
                 <Button title="Map View"
                         onPress={() => props.setCurrentView("DisplayNotesMap")}
                         style={styles.fixToBottom}></Button>
-            </SafeAreaView>);
+            </View>);
     }else{
         return (<View>
                     <Text>Notes list is empty...</Text>
@@ -125,9 +125,7 @@ export function DisplayNotes (user) {
 
     return (
         <View>
-            <View style={styles.container}>
-                <GetCurrentViewNode currentView={currentView} setCurrentView={setCurrentView} user={user} />
-            </View>
+            <GetCurrentViewNode currentView={currentView} setCurrentView={setCurrentView} user={user} />
         </View>
     );
 }
@@ -220,14 +218,12 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height * 0.8,
     },
     fixToBottom: {
-        minWidth: Dimensions.get('window').width * 0.3,
+        flexDirection: 'row',
+        marginTop:10,
         justifyContent: 'flex-end',
-        // position: 'absolute',
-        // bottom: 0,
-        // left: 0,
     },
     titleCenter: {
-      textAlign: "center"
+        justifyContent: 'center',
     },
     deleteButton: {
         borderRadius: 10

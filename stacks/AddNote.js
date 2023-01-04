@@ -1,20 +1,30 @@
-import {Button, StyleSheet, TextInput, View} from "react-native";
-import {Title} from "react-native-paper";
 import React, {useState} from "react";
+import {Button, StyleSheet, View} from "react-native";
+import {Title, TextInput, Provider, DefaultTheme} from "react-native-paper";
+import DropDown from "react-native-paper-dropdown";
+
 import {createNote} from "../utils/note_utils";
 import {showAlert} from "../utils/alert_utils";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export function AddNote(user) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [latitude, setLatitude] = useState(0.0);
     const [longitude, setLongitude] = useState(0.0);
+    const [showFrequencyOptions, setShowFrequencyOptions] = useState(false);
+    const [frequency, setFrequency] = useState("daily");
+    const [frequencyItems, setFrequencyItems] = useState(
+        [{label: "Hourly", value: "hourly"},
+                  {label:"Daily", value: "daily"},
+                  {label: "Weekly", value: "weekly"},{label: "Monthly", value: "monthly"},
+                  {label: "Yearly", value: "yearly"}]
+    );
     return (
         <View style={styles.container}>
             <Title>Create New GeoNote</Title>
             <View style={styles.inputView}>
                 <TextInput
-                    style={styles.TextInput}
                     placeholder="Enter Title"
                     ref={component => this.titleInput = component}
                     onChangeText={newText => setTitle(newText)}
@@ -22,7 +32,6 @@ export function AddNote(user) {
             </View>
             <View style={styles.inputView}>
                 <TextInput
-                    style={styles.TextInput}
                     placeholder="Enter Description"
                     ref={component => this.descriptionInput = component}
                     onChangeText={newText => setDescription(newText)}
@@ -30,7 +39,6 @@ export function AddNote(user) {
             </View>
             <View style={styles.inputView}>
                 <TextInput
-                    style={styles.TextInput}
                     keyboardType='numeric'
                     placeholder="Set Latitude"
                     ref={component => this.latitudeInput = component}
@@ -38,11 +46,21 @@ export function AddNote(user) {
             </View>
             <View style={styles.inputView}>
                 <TextInput
-                    style={styles.TextInput}
                     keyboardType='numeric'
                     placeholder="Set Longitude"
                     ref={input => { this.longitudeInput = input }}
                     onChangeText={newText => setLongitude(newText)}/>
+            </View>
+            <View style={styles.inputView}>
+                <DropDownPicker
+                    multiple={false}
+                    open={showFrequencyOptions}
+                    value={frequency}
+                    items={frequencyItems}
+                    setOpen={setShowFrequencyOptions}
+                    setValue={setFrequency}
+                    setItems={setFrequencyItems}
+                />
             </View>
             <Button
                 title="Create Note"
@@ -51,7 +69,8 @@ export function AddNote(user) {
                         await createNote(user, {"title": title,
                                                "description": description,
                                                "lat": latitude,
-                                               "lon": longitude}).then(_=>{
+                                               "lon": longitude,
+                                               "frequency": frequency}).then(_=>{
                             showAlert('Success', `Note "${title}" was added successfully`)
                             setTitle('');
                             this.titleInput.setNativeProps({'text': ''});
@@ -80,19 +99,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
-
     inputView: {
-        backgroundColor: "#A9A9A9",
-        borderRadius: 30,
-        height: 45,
-        marginBottom: 20,
-        alignItems: "center",
+        minWidth: 200,
+        maxWidth: 200,
+        height: 40,
+        marginBottom: 20
     },
     TextInput: {
-        height: 50,
-        flex: 1,
-        padding: 10,
-        marginLeft: 20,
+        // height: 50,
+        // flex: 1,
+        // padding: 10,
+        // marginLeft: 20,
     },
     loginBtn: {
         width: "80%",

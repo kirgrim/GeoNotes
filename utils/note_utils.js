@@ -15,7 +15,6 @@ export async function listNotes(user){
 
 
 export async function deleteNote(noteId){
-    console.log('starting deletion of noteId=', noteId)
     return await getCollection('notes').where("id", "==", noteId).get()
         .then(querySnapshot=>{
             querySnapshot.forEach(doc=>{
