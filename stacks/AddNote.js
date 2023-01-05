@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {Button, StyleSheet, View} from "react-native";
-import {Title, TextInput, Provider, DefaultTheme} from "react-native-paper";
-import DropDown from "react-native-paper-dropdown";
+import {Title, TextInput} from "react-native-paper";
 
 import {createNote} from "../utils/note_utils";
 import {showAlert} from "../utils/alert_utils";
@@ -13,11 +12,12 @@ export function AddNote(user) {
     const [latitude, setLatitude] = useState(0.0);
     const [longitude, setLongitude] = useState(0.0);
     const [showFrequencyOptions, setShowFrequencyOptions] = useState(false);
-    const [frequency, setFrequency] = useState("daily");
+    const [frequency, setFrequency] = useState("");
     const [frequencyItems, setFrequencyItems] = useState(
         [{label: "Hourly", value: "hourly"},
                   {label:"Daily", value: "daily"},
-                  {label: "Weekly", value: "weekly"},{label: "Monthly", value: "monthly"},
+                  {label: "Weekly", value: "weekly"},
+                  {label: "Monthly", value: "monthly"},
                   {label: "Yearly", value: "yearly"}]
     );
     return (
@@ -53,6 +53,7 @@ export function AddNote(user) {
             </View>
             <View style={styles.inputView}>
                 <DropDownPicker
+                    placeholder={"Select Frequency"}
                     multiple={false}
                     open={showFrequencyOptions}
                     value={frequency}
@@ -70,7 +71,7 @@ export function AddNote(user) {
                                                "description": description,
                                                "lat": latitude,
                                                "lon": longitude,
-                                               "frequency": frequency}).then(_=>{
+                                               "frequency": frequency || "daily"}).then(_=>{
                             showAlert('Success', `Note "${title}" was added successfully`)
                             setTitle('');
                             this.titleInput.setNativeProps({'text': ''});

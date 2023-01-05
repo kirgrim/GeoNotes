@@ -29,7 +29,6 @@ function DisplayNotesList(props) {
     if (props.userNotes && props.userNotes.length > 0) {
         return (
             <View>
-                <Title>List View</Title>
                 {props.userNotes.map(note => (
                     <List.Item
                         key={note.id}
@@ -121,7 +120,7 @@ export function DisplayNotesMap(props) {
 }
 
 export function DisplayNotes (user) {
-    const [currentView, setCurrentView] = useState("DisplayNotesMap");
+    const [currentView, setCurrentView] = useState("DisplayNotesRaw");
 
     return (
         <View>
