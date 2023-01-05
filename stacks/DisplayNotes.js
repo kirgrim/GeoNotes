@@ -84,7 +84,7 @@ export function DisplayNotesMap(props) {
 
     return (
         <View>
-            <SafeAreaView style={{flex: 1}}>
+            <SafeAreaView>
                 <View style={styles.container}>
                     <MapView
                         style={styles.mapStyle}
