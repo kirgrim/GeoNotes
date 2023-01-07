@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button, Text, View, StyleSheet, SafeAreaView, Dimensions} from "react-native";
-import {List, Title} from 'react-native-paper';
+import {List} from 'react-native-paper';
 import {deleteNote, listNotes} from "../utils/note_utils";
 import MapView, {Marker} from "react-native-maps";
 import {requestLocation} from "../utils/location_utils";
