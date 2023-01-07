@@ -62,7 +62,7 @@ function shouldSendAccordingToFrequency(note){
             shouldSent = note.last_notified_time >= 30 * 7 * 24 * 60 * 60
             break;
         case 'yearly':
-            shouldSent = note.last_notified_time >= 365 * 30 * 7 * 24 * 60 * 60
+            shouldSent = note.last_notified_time >= 12 * 30 * 7 * 24 * 60 * 60
             break;
         default:
             console.warn(`Unresolved frequency: ${note.frequency}`);
