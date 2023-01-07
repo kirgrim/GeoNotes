@@ -3,7 +3,9 @@ import BackgroundService from "react-native-background-actions";
 import {getTimestamp, sleep} from "./timer_utils";
 import {getCloseNotes, updateNote} from "./note_utils";
 import {requestCurrentUserLocation} from "./location_utils";
+import {NativeModules} from "react-native";
 
+const SharedStorage = NativeModules.SharedStorage;
 
 const notesObserver = async (taskDataArguments) => {
     const { interval, maxDistance } = taskDataArguments;
@@ -21,6 +23,9 @@ const notesObserver = async (taskDataArguments) => {
                     console.warn('Failed to get current user location, skipping');
                 }else {
                     const closeNotes = await getCloseNotes(global.currentUser, global.currentUserLocation, maxDistance);
+                    SharedStorage.set(
+                        JSON.stringify({text: `We detected ${closeNotes.length} note(s) nearby!`})
+                    );
                     for (const note of closeNotes) {
                         await notifee.displayNotification({
                             title: note.title,
