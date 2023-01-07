@@ -8,12 +8,15 @@
 
 import React, {useEffect, useState} from 'react';
 import type {Node} from 'react';
-import Swiper from "react-native-screens-swiper";
 import {HomeScreen} from "./stacks/Home";
 import {AddNote} from "./stacks/AddNote";
 import {DisplayNotes} from "./stacks/DisplayNotes";
 import auth from '@react-native-firebase/auth';
 import {AuthForm} from "./stacks/Auth";
+import {NavigationContainer} from "@react-navigation/native";
+import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
+
+const Tab = createMaterialTopTabNavigator();
 
 const App: () => Node = () => {
 
@@ -32,22 +35,6 @@ const App: () => Node = () => {
         return auth().onAuthStateChanged(onAuthStateChanged); // unsubscribe on unmount
     }, []);
 
-
-    const data = [
-        {
-            tabLabel: 'Profile',
-            component: HomeScreen(user),
-        },
-        {
-            tabLabel: 'My Notes',
-            component: DisplayNotes(user),
-        },
-        {
-            tabLabel: 'Add Note',
-            component: AddNote(user),
-        }
-    ];
-
     if (initializing) return null;
 
 
@@ -56,10 +43,13 @@ const App: () => Node = () => {
     }
 
     return (
-        <Swiper
-            data={data}
-            isStaticPills={false}
-            style={styles}/>
+        <NavigationContainer>
+            <Tab.Navigator>
+                <Tab.Screen name="Profile" component={HomeScreen} initialParams={{ user: user }}/>
+                <Tab.Screen name="My Notes" component={DisplayNotes} initialParams={{ user: user }} />
+                <Tab.Screen name="Add Note" component={AddNote} initialParams={{ user: user }} />
+            </Tab.Navigator>
+        </NavigationContainer>
     );
 }
 

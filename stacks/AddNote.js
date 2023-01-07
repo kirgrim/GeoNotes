@@ -6,7 +6,8 @@ import {createNote} from "../utils/note_utils";
 import {showAlert} from "../utils/alert_utils";
 import DropDownPicker from "react-native-dropdown-picker";
 
-export function AddNote(user) {
+export function AddNote({route}) {
+    const {user} = route.params;
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [latitude, setLatitude] = useState(0.0);

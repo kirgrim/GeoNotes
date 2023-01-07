@@ -103,7 +103,9 @@ export function DisplayNotesMap(props) {
         </View>)
 }
 
-export function DisplayNotes (user) {
+export function DisplayNotes({route}) {
+
+    const {user} = route.params;
     const [currentView, setCurrentView] = useState("DisplayNotesRaw");
 
     return (
