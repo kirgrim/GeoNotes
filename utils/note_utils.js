@@ -36,7 +36,7 @@ export async function createNote(user, data){
 }
 
 export async function updateNote(noteID, updateData) {
-    return await getCollection('notes').doc(noteID).set(updateData);
+    return await getCollection('notes').doc(noteID).update(updateData);
 }
 
 export function updateUserNotes(setUserNotes, props){
@@ -46,23 +46,24 @@ export function updateUserNotes(setUserNotes, props){
 }
 
 function shouldSendAccordingToFrequency(note){
-    // TODO: frequency is approximate here
     let shouldSent = false;
+    const timePassed = getTimestamp() - note.last_notified_time;
+
     switch (note.frequency.toLowerCase()) {
         case 'hourly':
-            shouldSent = note.last_notified_time >= 60 * 60
+            shouldSent = timePassed >= 60 * 60
             break;
         case 'daily':
-            shouldSent = note.last_notified_time >= 24 * 60 * 60
+            shouldSent = timePassed >= 24 * 60 * 60
             break;
         case 'weekly':
-            shouldSent = note.last_notified_time >= 7 * 24 * 60 * 60
+            shouldSent = timePassed >= 7 * 24 * 60 * 60
             break;
         case 'monthly':
-            shouldSent = note.last_notified_time >= 30 * 7 * 24 * 60 * 60
+            shouldSent = timePassed >= 30 * 7 * 24 * 60 * 60
             break;
         case 'yearly':
-            shouldSent = note.last_notified_time >= 12 * 30 * 7 * 24 * 60 * 60
+            shouldSent = timePassed >= 12 * 30 * 7 * 24 * 60 * 60
             break;
         default:
             console.warn(`Unresolved frequency: ${note.frequency}`);
@@ -73,6 +74,7 @@ function shouldSendAccordingToFrequency(note){
 export async function getCloseNotes(user, userCoords, maxDistanceMeters){
     const userNotes = await listNotes(user);
     return userNotes.filter((note) =>
-        getDistanceFromCoordinates(userCoords, {lat: note.lat, lon: note.lon}) <= maxDistanceMeters && shouldSendAccordingToFrequency(note)
+        getDistanceFromCoordinates({lat: userCoords.latitude, lon: userCoords.longitude},
+                                   {lat: note.lat, lon: note.lon}) <= maxDistanceMeters && shouldSendAccordingToFrequency(note)
     );
 }

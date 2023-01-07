@@ -8,12 +8,12 @@ export const requestCurrentUserLocation = async () => {
             return Geolocation.getCurrentPosition(
                 position => {
                     global.currentUserLocation = {
-                        lat: position['coords'].latitude,
-                        lon: position['coords'].longitude,
+                        latitude: position['coords'].latitude,
+                        longitude: position['coords'].longitude,
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     };
-                    console.log('updated location')
+                    console.log('updated location with position = ', position)
                 },
                 error => {
                     // See error code charts below.

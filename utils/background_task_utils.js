@@ -24,7 +24,7 @@ const notesObserver = async (taskDataArguments) => {
                     for (const note of closeNotes) {
                         await notifee.displayNotification({
                             title: note.title,
-                            subtitle: "Check your note!",
+                            subtitle: "We received your note within 100 meters!",
                             body: note.description,
                             data: {},
                             android: {

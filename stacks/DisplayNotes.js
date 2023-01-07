@@ -44,8 +44,14 @@ function DisplayNotesList(props) {
 }
 
 export function DisplayNotesMap(props) {
-    let location;
-    if (global.currentUserLocation){
+    let location = {
+        latitude: 20.78825,
+        longitude: -20.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+    };
+    const currLocation = global.currentUserLocation;
+    if (currLocation){
         location = global.currentUserLocation
     }
     else if (props.userNotes.length > 0){
@@ -55,13 +61,6 @@ export function DisplayNotesMap(props) {
             longitude: parseFloat(firstNote.lon),
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
-        }
-    }else{
-        location = {
-            latitude: 20.78825,
-            longitude: -20.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
         }
     }
 
