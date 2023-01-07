@@ -1,15 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Button, Text, View, StyleSheet, SafeAreaView, Dimensions} from "react-native";
 import {List} from 'react-native-paper';
-import {deleteNote, listNotes} from "../utils/note_utils";
+import {deleteNote, updateUserNotes} from "../utils/note_utils";
 import MapView, {Marker} from "react-native-maps";
-import {requestLocation} from "../utils/location_utils";
-
-function updateUserNotes(setUserNotes, props){
-    listNotes(props.user).then(notesList => {
-        setUserNotes(notesList);
-    });
-}
 
 export const GetCurrentViewNode = (props) => {
     const [userNotes, setUserNotes] = useState([]);
@@ -51,36 +44,26 @@ function DisplayNotesList(props) {
 }
 
 export function DisplayNotesMap(props) {
-    // TODO: move this code to worker
-    let initialLocation
-    if (props.userNotes.length > 0){
+    let location;
+    if (global.currentUserLocation){
+        location = global.currentUserLocation
+    }
+    else if (props.userNotes.length > 0){
         const firstNote = props.userNotes[0]
-        initialLocation = {
+        location = {
             latitude: parseFloat(firstNote.lat),
             longitude: parseFloat(firstNote.lon),
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
         }
     }else{
-        initialLocation = {
+        location = {
             latitude: 20.78825,
             longitude: -20.4324,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421
         }
     }
-    const [location, setLocation] = useState(initialLocation);
-
-    useEffect(() => {
-        const locationUpdateTimer = setInterval(async () => {
-            // const oldLocation = location;
-            await requestLocation(setLocation);
-            console.log('location = ', location);
-        }, 5000);
-        return () => {
-            clearInterval(locationUpdateTimer);
-        };
-    }, [location, setLocation]);
 
     return (
         <View>

@@ -23,6 +23,8 @@ const App: () => Node = () => {
     // Handles user state changes
     function onAuthStateChanged(user) {
         setUser(user);
+        global.currentUser = user;
+        console.log('current user updated')
         if (initializing) setInitializing(false);
     }
 

@@ -1,6 +1,8 @@
 import uuid from 'react-native-uuid';
 import {logoutUser} from "./auth_utils";
 import {getCollection} from "./db_utils";
+import {getDistanceFromCoordinates} from "./math_utils";
+import {getTimestamp} from "./timer_utils";
 
 
 export async function listNotes(user){
@@ -25,8 +27,52 @@ export async function deleteNote(noteId){
 
 export async function createNote(user, data){
     const newNoteID = uuid.v4();
+    const ts = getTimestamp();
     data['id'] = newNoteID;
-    data['created_on'] = Math.floor(new Date().getTime()/1000);
+    data['created_on'] = ts;
+    data['last_notified_time'] = ts;
     data['user_id'] = user.uid;
     return await getCollection('notes').doc(newNoteID).set(data);
+}
+
+export async function updateNote(noteID, updateData) {
+    return await getCollection('notes').doc(noteID).set(updateData);
+}
+
+export function updateUserNotes(setUserNotes, props){
+    listNotes(props.user).then(notesList => {
+        setUserNotes(notesList);
+    });
+}
+
+function shouldSendAccordingToFrequency(note){
+    // TODO: frequency is approximate here
+    let shouldSent = false;
+    switch (note.frequency.toLowerCase()) {
+        case 'hourly':
+            shouldSent = note.last_notified_time >= 60 * 60
+            break;
+        case 'daily':
+            shouldSent = note.last_notified_time >= 24 * 60 * 60
+            break;
+        case 'weekly':
+            shouldSent = note.last_notified_time >= 7 * 24 * 60 * 60
+            break;
+        case 'monthly':
+            shouldSent = note.last_notified_time >= 30 * 7 * 24 * 60 * 60
+            break;
+        case 'yearly':
+            shouldSent = note.last_notified_time >= 365 * 30 * 7 * 24 * 60 * 60
+            break;
+        default:
+            console.warn(`Unresolved frequency: ${note.frequency}`);
+    }
+    return shouldSent;
+}
+
+export async function getCloseNotes(user, userCoords, maxDistanceMeters){
+    const userNotes = await listNotes(user);
+    return userNotes.filter((note) =>
+        getDistanceFromCoordinates(userCoords, {lat: note.lat, lon: note.lon}) <= maxDistanceMeters && shouldSendAccordingToFrequency(note)
+    );
 }
