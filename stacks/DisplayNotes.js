@@ -3,6 +3,7 @@ import {Button, Text, View, StyleSheet, SafeAreaView, Dimensions} from "react-na
 import {List} from 'react-native-paper';
 import {deleteNote, updateUserNotes} from "../utils/note_utils";
 import MapView, {Marker} from "react-native-maps";
+import {shout} from "../utils/audio_utils";
 
 export const GetCurrentViewNode = (props) => {
     const [userNotes, setUserNotes] = useState([]);
@@ -27,6 +28,7 @@ function DisplayNotesList(props) {
                         key={note.id}
                         title={note.title}
                         description={note.description}
+                        left={()=> <Button color={"white"} title={"🗣️"} onPress={() => shout(`Title: ${note.title}; description: ${note.description}`)}/> }
                         right={()=> <Button color="red" style={styles.deleteButton} title={"X"} onPress={()=> deleteNote(note.id)}/>}/>
                 ))}
                 <Button title="Map View"
