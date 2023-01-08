@@ -15,6 +15,19 @@ export async function listNotes(user){
     }
 }
 
+export async function getNote(user, noteId){
+    const notes = await getCollection('notes')
+        .where('user_id', '==', user.uid)
+        .where('id', '==', noteId).get();
+    if (notes.empty){
+        console.log('matching note not found...')
+        return null;
+    }else{
+        console.log('rendering note:' ,notes.docs[0].data());
+        return notes.docs[0].data();
+    }
+}
+
 
 export async function deleteNote(noteId){
     return await getCollection('notes').where("id", "==", noteId).get()
@@ -73,8 +86,9 @@ function shouldSendAccordingToFrequency(note){
 
 export async function getCloseNotes(user, userCoords, maxDistanceMeters){
     const userNotes = await listNotes(user);
-    return userNotes.filter((note) =>
+    const closeUserNotes = userNotes.filter((note) =>
         getDistanceFromCoordinates({lat: userCoords.latitude, lon: userCoords.longitude},
-                                   {lat: note.lat, lon: note.lon}) <= maxDistanceMeters && shouldSendAccordingToFrequency(note)
-    );
+            {lat: note.lat, lon: note.lon}) <= maxDistanceMeters);
+    const shouldSendNotes = closeUserNotes.filter((note) => shouldSendAccordingToFrequency(note));
+    return {closeUserNotes: closeUserNotes, shouldSendNotes: shouldSendNotes}
 }

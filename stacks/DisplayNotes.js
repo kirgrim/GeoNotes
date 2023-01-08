@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {Button, Text, View, StyleSheet, SafeAreaView, Dimensions} from "react-native";
 import {List} from 'react-native-paper';
-import {deleteNote, updateUserNotes} from "../utils/note_utils";
+import {deleteNote, getNote, updateUserNotes} from "../utils/note_utils";
 import MapView, {Marker} from "react-native-maps";
 import {shout} from "../utils/audio_utils";
+import {createNativeStackNavigator} from "react-native-screens/native-stack";
+import {useNavigation} from "@react-navigation/native";
 
 export const GetCurrentViewNode = (props) => {
     const [userNotes, setUserNotes] = useState([]);
@@ -13,13 +15,15 @@ export const GetCurrentViewNode = (props) => {
     }, [userNotes, setUserNotes]);
 
     if (props.currentView === 'DisplayNotesRaw') {
-        return (<DisplayNotesList setCurrentView={props.setCurrentView} userNotes={userNotes} />);
+        return (<DisplayNotesList user={props.user} setCurrentView={props.setCurrentView} userNotes={userNotes} />);
     } else {
-        return (<DisplayNotesMap setCurrentView={props.setCurrentView} userNotes={userNotes} />);
+        return (<DisplayNotesMap user={props.user} setCurrentView={props.setCurrentView} userNotes={userNotes} />);
     }
 }
 
 function DisplayNotesList(props) {
+    const navigation = useNavigation();
+    navigation.setOptions({ title: 'Notes List View' })
     if (props.userNotes && props.userNotes.length > 0) {
         return (
             <View>
@@ -28,6 +32,12 @@ function DisplayNotesList(props) {
                         key={note.id}
                         title={note.title}
                         description={note.description}
+                        onPress = {async () => {
+                            const item = await getNote(props.user, note.id);
+                            if (item) {
+                                navigation.navigate('DisplayItem', {note: item});
+                            }
+                        }}
                         left={()=> <Button color={"white"} title={"🗣️"} onPress={() => shout(`Title: ${note.title}; description: ${note.description}`)}/> }
                         right={()=> <Button color="red" style={styles.deleteButton} title={"X"} onPress={()=> deleteNote(note.id)}/>}/>
                 ))}
@@ -46,6 +56,8 @@ function DisplayNotesList(props) {
 }
 
 export function DisplayNotesMap(props) {
+    const navigation = useNavigation();
+    // navigation.setOptions({ title: 'Notes Map View' })
     let location = {
         latitude: 20.78825,
         longitude: -20.4324,
@@ -88,9 +100,12 @@ export function DisplayNotesMap(props) {
                                 key={note.id}
                                 title={note.title}
                                 description={note.description}
-                                onDragEnd={
-                                    (e) => alert(JSON.stringify(e.nativeEvent.coordinate))
-                                }
+                                onCalloutPress={async () => {
+                                    const item = await getNote(props.user, note.id);
+                                    if (item) {
+                                    navigation.navigate('DisplayItem', {note: item});
+                                    }
+                                }}
                             />
                         ))}
                     </MapView>
@@ -109,9 +124,32 @@ export function DisplayNotes({route}) {
     const [currentView, setCurrentView] = useState("DisplayNotesRaw");
 
     return (
+        <GetCurrentViewNode currentView={currentView} setCurrentView={setCurrentView} user={user} />
+    );
+}
+
+function DisplayItem({route}){
+    const {note} = route.params;
+    return (
         <View>
-            <GetCurrentViewNode currentView={currentView} setCurrentView={setCurrentView} user={user} />
+            <Text>Title: {note.title}</Text>
+            <Text>Description: {note.description}</Text>
+            <Text>Latitude: {note.lat}</Text>
+            <Text>Longitude: {note.lon}</Text>
+            <Text>Frequency: {note.frequency}</Text>
         </View>
+    )
+}
+
+const Stack = createNativeStackNavigator();
+
+export function DisplayNotesNavigator({route}){
+    const {user} = route.params;
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="DisplayNotes" component={DisplayNotes} initialParams={{user: user}} options={{headerShown: false}} />
+            <Stack.Screen name="DisplayItem" component={DisplayItem} options={{headerShown: true, title: 'Note Description'}} />
+        </Stack.Navigator>
     );
 }
 

@@ -10,7 +10,7 @@ import React, {useEffect, useState} from 'react';
 import type {Node} from 'react';
 import {HomeScreen} from "./stacks/Home";
 import {AddNote} from "./stacks/AddNote";
-import {DisplayNotes} from "./stacks/DisplayNotes";
+import {DisplayNotesNavigator} from "./stacks/DisplayNotes";
 import auth from '@react-native-firebase/auth';
 import {AuthForm} from "./stacks/Auth";
 import {NavigationContainer} from "@react-navigation/native";
@@ -46,7 +46,7 @@ const App: () => Node = () => {
         <NavigationContainer>
             <Tab.Navigator>
                 <Tab.Screen name="Profile" component={HomeScreen} initialParams={{ user: user }}/>
-                <Tab.Screen name="My Notes" component={DisplayNotes} initialParams={{ user: user }} />
+                <Tab.Screen name="My Notes" component={DisplayNotesNavigator} initialParams={{ user: user }} />
                 <Tab.Screen name="Add Note" component={AddNote} initialParams={{ user: user }} />
             </Tab.Navigator>
         </NavigationContainer>

@@ -22,11 +22,12 @@ const notesObserver = async (taskDataArguments) => {
                 if (!global.currentUserLocation){
                     console.warn('Failed to get current user location, skipping');
                 }else {
-                    const closeNotes = await getCloseNotes(global.currentUser, global.currentUserLocation, maxDistance);
+                    const items = await getCloseNotes(global.currentUser, global.currentUserLocation, maxDistance);
+                    // TODO: send all of these notes as deep links
                     SharedStorage.set(
-                        JSON.stringify({text: `We detected ${closeNotes.length} note(s) nearby!`})
+                        JSON.stringify({text: `We detected ${items.closeUserNotes.length} note(s) nearby!`})
                     );
-                    for (const note of closeNotes) {
+                    for (const note of items.shouldSendNotes) {
                         await notifee.displayNotification({
                             title: note.title,
                             subtitle: "We received your note within 100 meters!",
