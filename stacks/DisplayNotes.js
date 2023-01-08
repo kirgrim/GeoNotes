@@ -130,9 +130,12 @@ export function DisplayNotes({route}) {
 
 function DisplayItem({route}){
     const {note} = route.params;
+
+    const navigation = useNavigation();
+    navigation.setOptions({ title: note.title })
+
     return (
         <View>
-            <Text>Title: {note.title}</Text>
             <Text>Description: {note.description}</Text>
             <Text>Latitude: {note.lat}</Text>
             <Text>Longitude: {note.lon}</Text>

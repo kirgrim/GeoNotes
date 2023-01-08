@@ -15,10 +15,16 @@ import auth from '@react-native-firebase/auth';
 import {AuthForm} from "./stacks/Auth";
 import {NavigationContainer} from "@react-navigation/native";
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
+import * as Linking from 'expo-linking';
+import {Text} from "react-native";
 
 const Tab = createMaterialTopTabNavigator();
+const prefix = Linking.createURL('/');
 
 const App: () => Node = () => {
+    const linking = {
+        prefixes: [prefix],
+    };
 
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState(false);
@@ -43,7 +49,7 @@ const App: () => Node = () => {
     }
 
     return (
-        <NavigationContainer>
+        <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
             <Tab.Navigator>
                 <Tab.Screen name="Profile" component={HomeScreen} initialParams={{ user: user }}/>
                 <Tab.Screen name="My Notes" component={DisplayNotesNavigator} initialParams={{ user: user }} />

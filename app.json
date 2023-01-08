@@ -1,4 +1,7 @@
 {
   "name": "GeoNotes",
-  "displayName": "GeoNotes"
+  "displayName": "GeoNotes",
+  "expo": {
+    "scheme": "geonotes"
+  }
 }
