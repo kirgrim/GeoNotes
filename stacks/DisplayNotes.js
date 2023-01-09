@@ -130,21 +130,20 @@ function DisplayItem({route}){
     const noteId = route.params?.id;
     const [note, setNote] = useState(null);
 
-    console.log('processing note = ', noteId)
 
     useEffect(()=>{
         setTimeout( () => {
-        if (!note && global.currentUser){
-            getNote(global.currentUser, noteId).then(n=>{
-                console.log('n = ', n)
-                if (n){
-                   setNote(n);
-               }else{
-                   setNote(-1)
-               }
-            });
-        }
-    }, 1000)}, [note, setNote]);
+            if (!note && global.currentUser){
+                getNote(global.currentUser, noteId).then(n=>{
+                    if (n){
+                       setNote(n);
+                   }else{
+                       setNote(-1)
+                   }
+                });
+            }
+        }, 500)
+    }, [note, setNote]);
 
     const navigation = useNavigation();
 
