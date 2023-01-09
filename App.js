@@ -24,6 +24,18 @@ const prefix = Linking.createURL('/');
 const App: () => Node = () => {
     const linking = {
         prefixes: [prefix],
+        config: {
+            screens: {
+                Profile: 'home',
+                MyNotes: {
+                    screens: {
+                        DisplayNotes: 'notes/list',
+                        DisplayItem: 'notes/:id'
+                    },
+                },
+                AddNote: 'add'
+            },
+        },
     };
 
     const [initializing, setInitializing] = useState(true);
@@ -52,8 +64,8 @@ const App: () => Node = () => {
         <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
             <Tab.Navigator>
                 <Tab.Screen name="Profile" component={HomeScreen} initialParams={{ user: user }}/>
-                <Tab.Screen name="My Notes" component={DisplayNotesNavigator} initialParams={{ user: user }} />
-                <Tab.Screen name="Add Note" component={AddNote} initialParams={{ user: user }} />
+                <Tab.Screen name="MyNotes" options={{ title: 'My Notes' }} component={DisplayNotesNavigator} initialParams={{ user: user }} />
+                <Tab.Screen name="AddNote" options={{ title: "Add Note" }} component={AddNote} initialParams={{ user: user }} />
             </Tab.Navigator>
         </NavigationContainer>
     );

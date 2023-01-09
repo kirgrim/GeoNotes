@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {Button, Text, View, StyleSheet, SafeAreaView, Dimensions} from "react-native";
-import {List} from 'react-native-paper';
+import {ActivityIndicator, List} from 'react-native-paper';
 import {deleteNote, getNote, updateUserNotes} from "../utils/note_utils";
 import MapView, {Marker} from "react-native-maps";
 import {shout} from "../utils/audio_utils";
-import {createNativeStackNavigator} from "react-native-screens/native-stack";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {useNavigation} from "@react-navigation/native";
 
 export const GetCurrentViewNode = (props) => {
@@ -35,7 +35,7 @@ function DisplayNotesList(props) {
                         onPress = {async () => {
                             const item = await getNote(props.user, note.id);
                             if (item) {
-                                navigation.navigate('DisplayItem', {note: item});
+                                navigation.navigate('DisplayItem', {id: note.id});
                             }
                         }}
                         left={()=> <Button color={"white"} title={"🗣️"} onPress={() => shout(`Title: ${note.title}; description: ${note.description}`)}/> }
@@ -101,10 +101,7 @@ export function DisplayNotesMap(props) {
                                 title={note.title}
                                 description={note.description}
                                 onCalloutPress={async () => {
-                                    const item = await getNote(props.user, note.id);
-                                    if (item) {
-                                    navigation.navigate('DisplayItem', {note: item});
-                                    }
+                                    navigation.navigate('DisplayItem', {id: note.id});
                                 }}
                             />
                         ))}
@@ -129,19 +126,51 @@ export function DisplayNotes({route}) {
 }
 
 function DisplayItem({route}){
-    const {note} = route.params;
+
+    const noteId = route.params?.id;
+    const [note, setNote] = useState(null);
+
+    console.log('processing note = ', noteId)
+
+    useEffect(()=>{
+        setTimeout( () => {
+        if (!note && global.currentUser){
+            getNote(global.currentUser, noteId).then(n=>{
+                console.log('n = ', n)
+                if (n){
+                   setNote(n);
+               }else{
+                   setNote(-1)
+               }
+            });
+        }
+    }, 1000)}, [note, setNote]);
 
     const navigation = useNavigation();
-    navigation.setOptions({ title: note.title })
 
-    return (
-        <View>
-            <Text>Description: {note.description}</Text>
-            <Text>Latitude: {note.lat}</Text>
-            <Text>Longitude: {note.lon}</Text>
-            <Text>Frequency: {note.frequency}</Text>
-        </View>
-    )
+    if (note && note !== -1){
+        navigation.setOptions({ title: note.title })
+
+        return (
+            <View>
+                <Text>Description: {note.description}</Text>
+                <Text>Latitude: {note.lat}</Text>
+                <Text>Longitude: {note.lon}</Text>
+                <Text>Frequency: {note.frequency}</Text>
+            </View>
+        )
+    } else if(note === -1){
+        return (<View>
+                    <Text>No matching note found for user {global.currentUser.email}</Text>
+                </View>);
+    } else{
+        return (
+            <View>
+                <Text>Loading Data...</Text>
+                <ActivityIndicator animating={true}/>
+            </View>
+        );
+    }
 }
 
 const Stack = createNativeStackNavigator();
