@@ -7,11 +7,10 @@ import {showAlert} from "../utils/alert_utils";
 import DropDownPicker from "react-native-dropdown-picker";
 
 export function AddNote({route}) {
-    const {user} = route.params;
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [latitude, setLatitude] = useState(0.0);
-    const [longitude, setLongitude] = useState(0.0);
+    const [latitude, setLatitude] = useState(route.params?.latitude || 0.0);
+    const [longitude, setLongitude] = useState(route.params?.longitude || 0.0);
     const [showFrequencyOptions, setShowFrequencyOptions] = useState(false);
     const [frequency, setFrequency] = useState("");
     const [frequencyItems, setFrequencyItems] = useState(
@@ -42,6 +41,7 @@ export function AddNote({route}) {
                 <TextInput
                     keyboardType='numeric'
                     placeholder="Set Latitude"
+                    value={latitude.toString()}
                     ref={component => this.latitudeInput = component}
                     onChangeText={newText => setLatitude(newText)}/>
             </View>
@@ -49,6 +49,7 @@ export function AddNote({route}) {
                 <TextInput
                     keyboardType='numeric'
                     placeholder="Set Longitude"
+                    value={longitude.toString()}
                     ref={input => { this.longitudeInput = input }}
                     onChangeText={newText => setLongitude(newText)}/>
             </View>
@@ -68,7 +69,7 @@ export function AddNote({route}) {
                 title="Create Note"
                 onPress={async () => {
                     if (title && latitude && longitude){
-                        await createNote(user, {"title": title,
+                        await createNote(global.currentUser, {"title": title,
                                                "description": description,
                                                "lat": latitude,
                                                "lon": longitude,

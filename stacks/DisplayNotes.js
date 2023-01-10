@@ -6,6 +6,7 @@ import MapView, {Marker} from "react-native-maps";
 import {shout} from "../utils/audio_utils";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {useNavigation} from "@react-navigation/native";
+import {AddNote} from "./AddNote";
 
 export const GetCurrentViewNode = (props) => {
     const [userNotes, setUserNotes] = useState([]);
@@ -90,6 +91,11 @@ export function DisplayNotesMap(props) {
                         zoomEnabled={true}
                         pitchEnabled={true}
                         scrollEnabled={true}
+                        onPress={ (event) => {
+                            const coordinates = event.nativeEvent.coordinate;
+                            navigation.navigate('AddItem', {'latitude': coordinates.latitude,
+                                                            'longitude': coordinates.longitude})
+                        }}
                         customMapStyle={mapStyle}>
                         {props.userNotes.map(note => (
                             <Marker
@@ -180,6 +186,7 @@ export function DisplayNotesNavigator({route}){
         <Stack.Navigator>
             <Stack.Screen name="DisplayNotes" component={DisplayNotes} initialParams={{user: user}} options={{headerShown: false}} />
             <Stack.Screen name="DisplayItem" component={DisplayItem} options={{headerShown: true, title: 'Note Description'}} />
+            <Stack.Screen name="AddItem" component={AddNote} options={{headerShown: false, title: 'Note Description'}} />
         </Stack.Navigator>
     );
 }
